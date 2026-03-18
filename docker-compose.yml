@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Python模拟应用
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: api-simulator
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - monitor-network
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    networks:
+      - monitor-network
+
+  # Grafana
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:3000
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - monitor-network
+    depends_on:
+      - prometheus
+
+networks:
+  monitor-network:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:
