@@ -176,19 +176,19 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "histogram_quantile(0.50, sum by (le, uri) (rate(invokeHis_bucket[5m])))",
+          "expr": "histogram_quantile(0.50, sum without (instance) by (le, uri) (rate(invokeHis_bucket[5m])))",
           "legendFormat": "{{uri}} - p50",
           "refId": "A"
         },
         {
           "datasource": "prometheus",
-          "expr": "histogram_quantile(0.95, sum by (le, uri) (rate(invokeHis_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum without (instance) by (le, uri) (rate(invokeHis_bucket[5m])))",
           "legendFormat": "{{uri}} - p95",
           "refId": "B"
         },
         {
           "datasource": "prometheus",
-          "expr": "histogram_quantile(0.99, sum by (le, uri) (rate(invokeHis_bucket[5m])))",
+          "expr": "histogram_quantile(0.99, sum without (instance) by (le, uri) (rate(invokeHis_bucket[5m])))",
           "legendFormat": "{{uri}} - p99",
           "refId": "C"
         }
@@ -282,7 +282,7 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "rate(invoke_im_total[5m])",
+          "expr": "sum without (instance) (rate(invoke_im_total[5m]))",
           "legendFormat": "IM调用次数/s",
           "refId": "A"
         }
@@ -342,7 +342,7 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "rate(invoke_im_cost_total[5m]) / rate(invoke_im_total[5m])",
+          "expr": "sum without (instance) (rate(invoke_im_cost_total[5m])) / sum without (instance) (rate(invoke_im_total[5m]))",
           "legendFormat": "IM平均耗时",
           "refId": "A"
         }
@@ -436,7 +436,7 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "rate(invoke_card_total[5m])",
+          "expr": "sum without (instance) (rate(invoke_card_total[5m]))",
           "legendFormat": "Card调用次数/s",
           "refId": "A"
         }
@@ -496,7 +496,7 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "rate(invoke_card_cost_total[5m]) / rate(invoke_card_total[5m])",
+          "expr": "sum without (instance) (rate(invoke_card_cost_total[5m])) / sum without (instance) (rate(invoke_card_total[5m]))",
           "legendFormat": "Card平均耗时",
           "refId": "A"
         }
@@ -621,7 +621,7 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "sum by (api_name, status) (rate(api_calls_total[5m]))",
+          "expr": "sum without (instance) by (api_name, status) (rate(api_calls_total[5m]))",
           "legendFormat": "{{api_name}} - {{status}}",
           "refId": "A"
         }
@@ -702,19 +702,19 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "histogram_quantile(0.50, sum by (le, api_name) (rate(api_call_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.50, sum without (instance) by (le, api_name) (rate(api_call_duration_seconds_bucket[5m])))",
           "legendFormat": "{{api_name}} - p50",
           "refId": "A"
         },
         {
           "datasource": "prometheus",
-          "expr": "histogram_quantile(0.95, sum by (le, api_name) (rate(api_call_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum without (instance) by (le, api_name) (rate(api_call_duration_seconds_bucket[5m])))",
           "legendFormat": "{{api_name}} - p95",
           "refId": "B"
         },
         {
           "datasource": "prometheus",
-          "expr": "histogram_quantile(0.99, sum by (le, api_name) (rate(api_call_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.99, sum without (instance) by (le, api_name) (rate(api_call_duration_seconds_bucket[5m])))",
           "legendFormat": "{{api_name}} - p99",
           "refId": "C"
         }
@@ -774,7 +774,7 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "sum by (api_name) (rate(api_call_duration_seconds_sum[5m])) / sum by (api_name) (rate(api_call_duration_seconds_count[5m]))",
+          "expr": "sum without (instance) by (api_name) (rate(api_call_duration_seconds_sum[5m])) / sum without (instance) by (api_name) (rate(api_call_duration_seconds_count[5m]))",
           "legendFormat": "{{api_name}}",
           "refId": "A"
         }
@@ -830,7 +830,7 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "sum by (api_name) (rate(api_calls_total{status=\"error\"}[5m])) / sum by (api_name) (rate(api_calls_total[5m])) * 100",
+          "expr": "sum without (instance) by (api_name) (rate(api_calls_total{status=\"error\"}[5m])) / sum without (instance) by (api_name) (rate(api_calls_total[5m])) * 100",
           "legendFormat": "{{api_name}}",
           "refId": "A"
         }
@@ -911,7 +911,7 @@
       "targets": [
         {
           "datasource": "prometheus",
-          "expr": "sum by (le) (rate(api_call_duration_seconds_bucket[5m]))",
+          "expr": "sum without (instance) by (le) (rate(api_call_duration_seconds_bucket[5m]))",
           "legendFormat": "{{le}}s",
           "refId": "A"
         }
