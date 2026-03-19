@@ -17,16 +17,200 @@
         "x": 0,
         "y": 0
       },
+      "id": 200,
+      "panels": [],
+      "title": "🔌 服务接口耗时监控",
+      "type": "row"
+    },
+    {
+      "datasource": "prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 201,
+      "options": {
+        "legend": {
+          "calcs": ["sum"],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "prometheus",
+          "expr": "sum by (uri) (rate(invokeHis_count[5m]))",
+          "legendFormat": "{{uri}}",
+          "refId": "A"
+        }
+      ],
+      "title": "🔌 服务接口调用次数 (每秒)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 202,
+      "options": {
+        "legend": {
+          "calcs": ["mean"],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "prometheus",
+          "expr": "histogram_quantile(0.50, sum by (le, uri) (rate(invokeHis_bucket[5m])))",
+          "legendFormat": "{{uri}} - p50",
+          "refId": "A"
+        },
+        {
+          "datasource": "prometheus",
+          "expr": "histogram_quantile(0.95, sum by (le, uri) (rate(invokeHis_bucket[5m])))",
+          "legendFormat": "{{uri}} - p95",
+          "refId": "B"
+        },
+        {
+          "datasource": "prometheus",
+          "expr": "histogram_quantile(0.99, sum by (le, uri) (rate(invokeHis_bucket[5m])))",
+          "legendFormat": "{{uri}} - p99",
+          "refId": "C"
+        }
+      ],
+      "title": "⏱️ 服务接口耗时 (秒)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
       "id": 100,
       "panels": [],
       "title": "📱 IM接口监控",
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
+      "datasource": "prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -97,10 +281,7 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "rate(invoke_im_total[5m])",
           "legendFormat": "IM调用次数/s",
           "refId": "A"
@@ -110,10 +291,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
+      "datasource": "prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -163,17 +341,14 @@
       "pluginVersion": "9.5.0",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "rate(invoke_im_cost_total[5m]) / rate(invoke_im_total[5m])",
           "legendFormat": "IM平均耗时",
           "refId": "A"
         }
       ],
       "title": "📱 IM平均响应时间",
-      "type": "bargauge"
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -189,10 +364,7 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
+      "datasource": "prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -263,10 +435,7 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "rate(invoke_card_total[5m])",
           "legendFormat": "Card调用次数/s",
           "refId": "A"
@@ -276,10 +445,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
+      "datasource": "prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -329,17 +495,14 @@
       "pluginVersion": "9.5.0",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "rate(invoke_card_cost_total[5m]) / rate(invoke_card_total[5m])",
           "legendFormat": "Card平均耗时",
           "refId": "A"
         }
       ],
       "title": "💳 Card平均响应时间",
-      "type": "bargauge"
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -355,10 +518,7 @@
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
+      "datasource": "prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -460,10 +620,7 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "sum by (api_name, status) (rate(api_calls_total[5m]))",
           "legendFormat": "{{api_name}} - {{status}}",
           "refId": "A"
@@ -473,10 +630,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
+      "datasource": "prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -547,28 +701,19 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "histogram_quantile(0.50, sum by (le, api_name) (rate(api_call_duration_seconds_bucket[5m])))",
           "legendFormat": "{{api_name}} - p50",
           "refId": "A"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "histogram_quantile(0.95, sum by (le, api_name) (rate(api_call_duration_seconds_bucket[5m])))",
           "legendFormat": "{{api_name}} - p95",
           "refId": "B"
         },
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "histogram_quantile(0.99, sum by (le, api_name) (rate(api_call_duration_seconds_bucket[5m])))",
           "legendFormat": "{{api_name}} - p99",
           "refId": "C"
@@ -578,10 +723,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
+      "datasource": "prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -631,10 +773,7 @@
       "pluginVersion": "9.5.0",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "sum by (api_name) (rate(api_call_duration_seconds_sum[5m])) / sum by (api_name) (rate(api_call_duration_seconds_count[5m]))",
           "legendFormat": "{{api_name}}",
           "refId": "A"
@@ -644,10 +783,7 @@
       "type": "bargauge"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
+      "datasource": "prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -693,10 +829,7 @@
       "pluginVersion": "9.5.0",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "sum by (api_name) (rate(api_calls_total{status=\"error\"}[5m])) / sum by (api_name) (rate(api_calls_total[5m])) * 100",
           "legendFormat": "{{api_name}}",
           "refId": "A"
@@ -706,10 +839,7 @@
       "type": "bargauge"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
+      "datasource": "prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -780,10 +910,7 @@
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
+          "datasource": "prometheus",
           "expr": "sum by (le) (rate(api_call_duration_seconds_bucket[5m]))",
           "legendFormat": "{{le}}s",
           "refId": "A"

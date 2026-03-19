@@ -62,6 +62,23 @@ INVOKE_CARD_COST = Counter(
     'Total Card API call duration in seconds'
 )
 
+# 服务暴露接口耗时（Histogram）
+INVOKE_HIS = Histogram(
+    'invokeHis',
+    'Service API call duration in seconds',
+    ['uri'],
+    buckets=(0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1.0, 2.5, 5.0, 7.5, 10.0)
+)
+
+# 模拟的服务接口列表
+SERVICE_APIS = [
+    '/api/user/info',
+    '/api/order/list',
+    '/api/product/detail',
+    '/api/cart/get',
+    '/api/payment/create',
+]
+
 
 def simulate_api_call(api_name: str) -> tuple:
     """模拟API调用，返回(状态, 耗时)"""
@@ -113,6 +130,12 @@ def background_simulator():
             t.start()
             threads.append(t)
         
+        # 随机调用服务接口 (40%概率)
+        if random.random() < 0.4:
+            t = threading.Thread(target=call_service_api)
+            t.start()
+            threads.append(t)
+        
         for t in threads:
             t.join()
         
@@ -149,6 +172,16 @@ def call_card_api():
     
     INVOKE_CARD.inc()
     INVOKE_CARD_COST.inc(duration)
+
+
+def call_service_api():
+    """调用服务暴露的接口并记录histogram指标"""
+    uri = random.choice(SERVICE_APIS)
+    duration = random.expovariate(1/0.15)  # 平均150ms
+    duration = min(duration, 5.0)
+    time.sleep(duration)
+    
+    INVOKE_HIS.labels(uri=uri).observe(duration)
 
 
 class PrometheusHandler(BaseHTTPRequestHandler):
